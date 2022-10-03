@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+<!-- <style type="text/css">-->
+<!--    .rw-header{-->
+<!--        background-color: #ffffff !important;-->
+<!--    }-->
+<!--    .rw-header .rw-title{-->
+<!--        background-color: #03fcf4;-->
+<!--    }-->
+
+<!--        .rw-header .rw-title{-->
+<!--        background-color: #03fcf4;-->
+<!--    }-->
+
+
+<!--    .rw-messages-container .rw-message .rw-response{-->
+<!--            white-space: pre-wrap; background-color: #03fcf4;-->
+<!--     }-->
+<!--    </style>-->
+<!--<script type="text/javascript">-->
+<!--!(function () {-->
+
+<!--  let e = document.createElement("script"),-->
+<!--    t = document.head || document.getElementsByTagName("head")[0];-->
+<!--  (e.src =-->
+<!--    "https://cdn.jsdelivr.net/npm/rasa-webchat@1.x.x/lib/index.js"),-->
+<!--    // Replace 1.x.x with the version that you want-->
+<!--    (e.async = !0),-->
+<!--    (e.onload = () => {-->
+<!--      window.WebChat.default(-->
+<!--        {-->
+<!--          initPayload: '/greet',-->
+<!--          customData: { language: "en" },-->
+<!--          socketUrl: "http://154.53.40.198:80",-->
+<!--          title: "Medical Bot",-->
+<!--          subtitle: "Say Hi and get started"-->
+<!--          // add other props here-->
+<!--        },-->
+<!--        null-->
+<!--      );-->
+<!--    }),-->
+<!--    t.insertBefore(e, t.firstChild);-->
+<!--})();-->
+<!--</script>-->
+<div id="rasa-chat-widget" data-websocket-url="http://154.53.40.198:80"></div>
+<script src="https://unpkg.com/@rasahq/rasa-chat" type="application/javascript"></script>
+
+
+</body>
+</html>
