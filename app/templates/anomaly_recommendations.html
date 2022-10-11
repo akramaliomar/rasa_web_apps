@@ -1,0 +1,31 @@
+ <table id="example1" class="display" style="width:100%">
+			   <thead>
+			   		<tr>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Context</th>
+                        <th><input class="flat-red" name="all22" type="checkbox"/></th>
+                        <th width="40px"><i class="fa fa-remove" style="color:red"></i></th>
+                    </tr>
+   				</thead>
+				<tbody>
+                 {% for row in recommendations %}
+					<tr>
+						<td>{{row["recoDescription"]}}</td>
+						<td>{{row["recoType"]}}</td>
+						<td>{{row["context"]}}</td>
+						<td><input class="flat-red" name="all22" type="checkbox"/></td>
+         				<td><i class="fa fa-remove" style="color:red"></i></td>
+					</tr>
+                 {% endfor %}
+				</tbody>
+   				<tfoot>
+					<tr>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Context</th>
+                        <th><input class="flat-red" name="all22" type="checkbox"/></th>
+                        <th width="40px"><i class="fa fa-remove" style="color:red"></i></th>
+                    </tr>
+				</tfoot>
+			</table>

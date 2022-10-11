@@ -1,0 +1,89 @@
+ <form class="row g-3 needs-validation" novalidate="">
+
+                          <div class="col-md-6">
+                            <label class="form-label" for="description">Description<span id="description-info" class="info"></span></label>
+                            <input class="form-control InputBox" id="description" type="text" placeholder="Enter Description" required="">
+                            <div class="valid-feedback">Looks good!</div>
+                          </div>
+                          <div class="col-md-6">
+                            <label class="form-label" for="minvalue">From <span id="minvalue-info" class="info"></span></label>
+                            <input class="form-control InputBox" id="minvalue" type="number" placeholder="Enter Minimum {{tab}}" required="">
+                            <div class="valid-feedback">Looks good!</div>
+                          </div>
+
+
+                          <div class="col-md-6">
+                            <label class="form-label" for="maxvalue">To <span id="maxvalue-info" class="info"></span></label>
+                            <input class="form-control InputBox" id="maxvalue" type="number" placeholder="Enter Maximum {{tab}}" required="">
+                            <div class="invalid-feedback">Please provide a valid city.</div>
+                          </div>
+
+
+
+
+                          <div class="col-md-6">
+                            <label class="form-label" for="age_range_name">Age Range<span id="age_range_name-info" class="info"></span></label>
+                            <select class="form-select InputBox" id="age_range_name" onchange="checkNewAge()" required="">
+                              <option selected="" disabled="" value="">Choose...</option>
+
+                                {% for x in age_range %}
+                                    {% if x["maxage"]>=12 %}
+                                    {% set maxage = ((x["maxage"]/12)|int) ~ " Years" %}
+                                    {% else %}
+                                    {% set maxage = x["maxage"] ~ " Months" %}
+                                    {% endif %}
+
+                                    {% if x["minage"]>=12 %}
+                                    {% set minage = ((x["minage"]/12)|int) ~ " Years" %}
+                                    {% else %}
+                                    {% set minage = x["minage"] ~ " Months" %}
+                                    {% endif %}
+
+                                      <option value='{{x["ageID"]}}'>{{x["ageName"]}} [{{minage}} - {{maxage}}]</option>
+
+                                  {% endfor %}
+
+                              <option value="new">New Range</option>
+                            </select>
+                          </div>
+
+
+                          <div class="col-md-6 new_age">
+                            <label class="form-label" for="new_age_range">New Age Range<span id="new_age_range-info" class="info"></span></label>
+                            <input class="form-control InputBox" id="new_age_range" type="text" placeholder="Enter Age Name" required="">
+                            <div class="valid-feedback">Looks good!</div>
+                          </div>
+
+
+                            <div class="col-md-6 new_age">
+                                <label class="form-label" for="min_age">Minimum<span id="min_age-info" class="info"></span></label>
+                                <div class="input-group mb-3">
+                                    <select class="form-select InputBox" id="minage_type"  required="">
+                                        <option selected="" disabled="" value="">Choose Type</option>
+                                        <option value="month">Month</option>
+                                        <option value="year">Year</option>
+                                    </select>
+                                    <input class="form-control InputBox" id="min_age" type="number" placeholder="Enter Minimum Age" required="">
+                              </div>
+
+                            </div>
+
+                            <div class="col-md-6 new_age">
+                            <label class="form-label" for="max_age">Maximum<span id="max_age-info" class="info"></span></label>
+                                <div class="input-group mb-3">
+                                    <select class="form-select InputBox" id="maxage_type" required="">
+                                        <option selected="" disabled="" value="">Choose Type</option>
+                                        <option value="month">Month</option>
+                                        <option value="year">Year</option>
+
+                                    </select>
+                            <input class="form-control InputBox" id="max_age" type="number" placeholder="Enter Maximum Age" required="">
+                              </div>
+
+                            </div>
+
+
+
+
+
+                        </form>

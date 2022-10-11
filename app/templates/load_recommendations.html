@@ -1,0 +1,64 @@
+
+       <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Recommendation form</h5>
+                                <button class="btn-close" type="button" data-coreui-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  <div id="form_content">
+
+                                  </div>
+
+                              </div>
+                              <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>
+                                <button onclick="save_recommendation_form()" class="btn btn-primary" type="button">Save Data</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+        <p><span style="float:left">List of Medical Remedies</span>
+                        <button data-coreui-toggle="modal" onclick="load_recommendation_form()" data-coreui-target="#exampleModal" data-coreui-whatever="@getbootstrap" class="btn btn-primary" style="float:right" type="button">Add new</button>
+
+                    </p><br>
+
+
+<table id="example" class="display" style="width:100%">
+<thead>
+<tr>
+ <th>Description</th>
+ <th>Vital Signs</th>
+ <th>Context</th>
+ <th>Option</th>
+ <th>Edit</th>
+ <th>Delete</th>
+  </tr>
+</thead>
+  <tbody>
+      {% for row in recommendations %}
+        <tr>
+          <td>{{row["recoDescription"]}}</td>
+          <td>{{row["recoType"]}}</td>
+          <td>{{row["context"]}}</td>
+          <td><a  aria-disabled="true" href="#">option</a></td>
+          <td><a  aria-disabled="true" href="#">edit</a></td>
+          <td><a aria-disabled="true" href="#">delete</a></td>
+        </tr>
+      {% endfor %}
+  </tbody>
+
+    <tfoot>
+<tr>
+ <th>Description</th>
+ <th>Vital Signs</th>
+ <th>Context</th>
+ <th>Option</th>
+ <th>Edit</th>
+ <th>Delete</th>
+  </tr>
+</tfoot>
+</table>

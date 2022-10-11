@@ -65,3 +65,54 @@ window.addEventListener('load', () => {
     scrollToBottomOfResults();
   });
 });
+
+
+function load_vital_signs(){
+    alert("hello")
+$.ajax({
+	method: "POST",
+	url: '/fetch_vital_sign',
+	contentType: 'application/json;charset=UTF-8',
+	data: JSON.stringify({'data':"hello world"}),
+	dataType: "json",
+	success: function(data) {
+		//if ((data.indexOf("No record found") > -1) || (data.indexOf("Date must be selected.") > -1)) {
+			$('#vital_sign_panel').html(data);
+			//$('#placeholder').hide();
+
+
+
+//			chart.setData({
+//				"xScale": "time",
+//				"yScale": "linear",
+//				"main": [{
+//						className: ".stats",
+//						data: []
+//					}]
+//			});
+		//} else {
+//			$('#msg').empty();
+//			$('#placeholder').show();
+//			var set = [];
+//			$.each(data, function() {
+//				set.push({
+//					x: this.label,
+//					y: parseInt(this.value, 10)
+//				});
+//			});
+//			chart.setData({
+//				"xScale": "time",
+//				"yScale": "linear",
+//				"main": [{
+//						className: ".stats",
+//						data: set
+//					}]
+//			});
+		//}
+	},
+	error: function(err) {
+		console.log(err);
+	}
+});
+
+}

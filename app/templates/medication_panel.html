@@ -1,0 +1,52 @@
+<style>
+
+table.example1{
+	border: 0px solid ;
+		}
+table.example1 td,th{
+	padding: 5px !important;
+	}
+		.checkall{
+			width: 20px !important;
+
+		}
+
+		.checkall input{
+			margin: 0 !important;
+		}
+</style>
+
+	<table class="table table-bordered" style="width:100%">
+	<tr>
+		<th width="48%">ASSIGNED RECOMMENDATIONS</th>
+        <th>ACTION</th>
+        <th width="48%">
+            <div class="form-group row">
+                  <label for="inputEmail3" class="col-sm-5 control-label">ASSIGN FROM</label>
+                  <div class="col-sm-7">
+                      <select class="form-control" id="from_reco" onChange="fetch_recommendation_from({{diagnID}})">
+                          <option value="">Load Recommendations from... </option>
+                          <option selected value="0">Recommendation List</option>
+                          <option value="1">Existing Medications</option>
+                          <option value="2">New Recommendation</option>
+
+                      </select>
+                  </div>
+            </div>
+        </th>
+	</tr>
+	<tr>
+		<td width="45%" id="loadAssignedID">
+
+		</td>
+		<td width="50px">
+			<button type="button" onClick="editMembersList()" class="btn btn-danger"><i class="fa fa-fw fa-angle-double-right"></i></button>
+			<br/>
+			<br/>
+			<button type="button" onClick="update_medication('{{diagnID}}')" class="btn btn-success"><i class="fa fa-fw fa-angle-double-left"></i></button>
+		</td>
+		<td width="45%" id="loadFromID">
+
+		</td>
+	</tr>
+</table>

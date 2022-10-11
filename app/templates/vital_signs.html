@@ -1,0 +1,176 @@
+
+       <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">New {{tab}} Range</h5>
+                                <button class="btn-close" type="button" data-coreui-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  <input type="hidden" id="tag" value="{{tag}}">
+
+                                  <div id="form_content">
+
+                                  </div>
+
+                              </div>
+                              <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>
+                                <button onclick="save_vital_sign_form()" class="btn btn-primary" type="button">Save Data</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+        <p><span style="float:left">Ranges of {{tab}} With respect to age</span>
+                        <button data-coreui-toggle="modal" onclick="load_vital_sign_form('{{tab}}')" data-coreui-target="#exampleModal" data-coreui-whatever="@getbootstrap" class="btn btn-primary" style="float:right" type="button">New {{tab}} Range</button>
+
+                    </p><br>
+<table class="table">
+<thead class="table-dark">
+<tr>
+ <th scope="col">Age</th>
+ <th scope="col">Age Range</th>
+ <th scope="col">Class</th>
+ <th scope="col">{{tab}} Range
+     {% if tab=="heart rate" %}
+        (bpm)
+     {% elif tab=="temperature" %}
+        (<sup>0</sup>C)
+     {% elif tab=="pressure" %}
+        (mmHg)
+     {% elif tab=="respiration" %}
+        (bpm)
+     {% elif tab=="spo2" %}
+        (%)
+     {% endif %}
+ </th>
+ <th scope="col">Edit</th>
+ <th scope="col">Delete</th>
+  </tr>
+</thead>
+  <tbody>
+ {% if tab=="heart rate" %}
+      {% for x in vital_signs %}
+        {% if x["maxage"]>=12 %}
+            {% set maxage = ((x["maxage"]/12)|int) ~ " Years" %}
+        {% else %}
+            {% set maxage = x["maxage"] ~ " Months" %}
+        {% endif %}
+
+            {% if x["minage"]>=12 %}
+                {% set minage = ((x["minage"]/12)|int) ~ " Years" %}
+            {% else %}
+                {% set minage = x["minage"] ~ " Months" %}
+            {% endif %}
+        <tr>
+          <td>{{x["ageName"]}}</td>
+          <td>{{minage}} - {{maxage}}</td>
+          <td>{{x["hrName"]}}</td>
+          <td>{{x["hrmin"]}} - {{x["hrmax"]}}</td>
+          <td><a  aria-disabled="true" href="#">edit</a></td>
+          <td><a aria-disabled="true" href="#">delete</a></td>
+
+        </tr>
+      {% endfor %}
+ {% elif tab=="temperature" %}
+       {% for x in vital_signs %}
+        {% if x["maxage"]>=12 %}
+            {% set maxage = ((x["maxage"]/12)|int) ~ " Years" %}
+        {% else %}
+            {% set maxage = x["maxage"] ~ " Months" %}
+        {% endif %}
+
+            {% if x["minage"]>=12 %}
+                {% set minage = ((x["minage"]/12)|int) ~ " Years" %}
+            {% else %}
+                {% set minage = x["minage"] ~ " Months" %}
+            {% endif %}
+        <tr>
+          <td>{{x["ageName"]}}</td>
+          <td>{{minage}} - {{maxage}}</td>
+          <td>{{x["btName"]}}</td>
+          <td>{{x["btmin"]}} - {{x["btmax"]}}</td>
+          <td><a  aria-disabled="true" href="#">edit</a></td>
+          <td><a aria-disabled="true" href="#">delete</a></td>
+
+        </tr>
+      {% endfor %}
+ {% elif tab=="respiration" %}
+       {% for x in vital_signs %}
+        {% if x["maxage"]>=12 %}
+            {% set maxage = ((x["maxage"]/12)|int) ~ " Years" %}
+        {% else %}
+            {% set maxage = x["maxage"] ~ " Months" %}
+        {% endif %}
+
+            {% if x["minage"]>=12 %}
+                {% set minage = ((x["minage"]/12)|int) ~ " Years" %}
+            {% else %}
+                {% set minage = x["minage"] ~ " Months" %}
+            {% endif %}
+        <tr>
+          <td>{{x["ageName"]}}</td>
+          <td>{{minage}} - {{maxage}}</td>
+          <td>{{x["respName"]}}</td>
+          <td>{{x["minresp"]}} - {{x["maxresp"]}}</td>
+          <td><a  aria-disabled="true" href="#">edit</a></td>
+          <td><a aria-disabled="true" href="#">delete</a></td>
+        </tr>
+      {% endfor %}
+  {% elif tab=="spo2" %}
+       {% for x in vital_signs %}
+        {% if x["maxage"]>=12 %}
+            {% set maxage = ((x["maxage"]/12)|int) ~ " Years" %}
+        {% else %}
+            {% set maxage = x["maxage"] ~ " Months" %}
+        {% endif %}
+
+            {% if x["minage"]>=12 %}
+                {% set minage = ((x["minage"]/12)|int) ~ " Years" %}
+            {% else %}
+                {% set minage = x["minage"] ~ " Months" %}
+            {% endif %}
+        <tr>
+          <td>{{x["ageName"]}}</td>
+          <td>{{minage}} - {{maxage}}</td>
+          <td>{{x["spName"]}}</td>
+          <td>{{x["minsp"]}} - {{x["maxsp"]}}</td>
+          <td><a  aria-disabled="true" href="#">edit</a></td>
+          <td><a aria-disabled="true" href="#">delete</a></td>
+        </tr>
+      {% endfor %}
+ {% elif tab=="pressure" %}
+        {% for x in vital_signs %}
+        {% if x["maxage"]>=12 %}
+            {% set maxage = ((x["maxage"]/12)|int) ~ " Years" %}
+        {% else %}
+            {% set maxage = x["maxage"] ~ " Months" %}
+        {% endif %}
+
+            {% if x["minage"]>=12 %}
+                {% set minage = ((x["minage"]/12)|int) ~ " Years" %}
+            {% else %}
+                {% set minage = x["minage"] ~ " Months" %}
+            {% endif %}
+        <tr>
+          <td>{{x["ageName"]}}</td>
+          <td>{{minage}} - {{maxage}}</td>
+          <td>{{x["prName"]}}</td>
+          <td>{{x["minpr"]}} - {{x["maxpr"]}}</td>
+          <td><a  aria-disabled="true" href="#">edit</a></td>
+          <td><a aria-disabled="true" href="#">delete</a></td>
+
+        </tr>
+      {% endfor %}
+  {% else %}
+        <tr>
+          <td colspan="7">No data found</td>
+        </tr>
+ {% endif %}
+
+
+
+  </tbody>
+</table>

@@ -1,0 +1,56 @@
+
+    {% extends "base_vs.html" %}
+
+{% block header_menu %}
+    <div class="container-fluid">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb my-0 ms-2">
+              <li class="breadcrumb-item">
+                <!-- if breadcrumb is single--><span>Home</span>
+              </li>
+              <li class="breadcrumb-item active"><span>Manage Vital Sign</span></li>
+            </ol>
+          </nav>
+        </div>
+{% endblock %}
+
+{% block vital_signs_summery %}
+
+
+    <div class="example" id="vital_signs_content" >
+
+                <ul class="nav nav-tabs" role="tablist">
+                  <li class="nav-item"><a class="nav-link active" data-coreui-toggle="tab" onclick="load_vital_signs('temperature')" href="#vital_sign_panel" role="tab">
+                      <svg class="icon me-2">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-media-play"></use>
+                      </svg>Temperature</a></li>
+
+                  <li class="nav-item"><a onclick="load_vital_signs('heart rate')" class="nav-link" data-coreui-toggle="tab" href="#vital_sign_panel" role="tab">
+                      <svg class="icon me-2">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-media-play"></use>
+                      </svg>Hear Rate</a></li>
+                  <li class="nav-item"><a class="nav-link" data-coreui-toggle="tab" onclick="load_vital_signs('respiration')" href="#vital_sign_panel" role="tab">
+                      <svg class="icon me-2">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-media-play"></use>
+                      </svg>Respiration Rate</a></li>
+                  <li class="nav-item"><a class="nav-link" onclick="load_vital_signs('spo2')" data-coreui-toggle="tab" href="#vital_sign_panel" role="tab">
+                      <svg class="icon me-2">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-media-play"></use>
+                      </svg>Blood Oxygen Saturation</a></li>
+                  <li class="nav-item"><a class="nav-link" onclick="load_vital_signs('pressure')" data-coreui-toggle="tab" href="#vital_sign_panel" role="tab">
+                      <svg class="icon me-2">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-media-play"></use>
+                      </svg>Pressure</a></li>
+
+
+
+                </ul>
+                <div class="tab-content rounded-bottom">
+                  <div class="tab-pane p-3 active preview" role="tabpanel" id="vital_sign_panel">
+
+
+                  </div>
+                </div>
+              </div>
+          <!-- /.row-->
+{% endblock %}

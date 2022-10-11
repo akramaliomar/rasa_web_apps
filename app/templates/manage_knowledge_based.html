@@ -1,0 +1,50 @@
+
+    {% extends "base_vs_knowledge.html" %}
+
+{% block header_menu %}
+    <div class="container-fluid">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb my-0 ms-2">
+              <li class="breadcrumb-item">
+                <!-- if breadcrumb is single--><span>Home</span>
+              </li>
+              <li class="breadcrumb-item active"><span>Manage Knowledge Based</span></li>
+            </ol>
+          </nav>
+        </div>
+{% endblock %}
+
+{% block vital_signs_summery %}
+
+
+    <div class="example" id="recommendations_content" >
+
+                <ul class="nav nav-tabs" role="tablist">
+                  <li class="nav-item"><a class="nav-link active" data-coreui-toggle="tab" onclick="load_recommendations()" href="#vital_sign_panel" role="tab">
+                      <svg class="icon me-2">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-media-play"></use>
+                      </svg>Manage Recommendations</a></li>
+
+                  <li class="nav-item"><a onclick="load_vital_signs('medication')" class="nav-link" data-coreui-toggle="tab" href="#vital_sign_panel" role="tab">
+                      <svg class="icon me-2">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-media-play"></use>
+                      </svg>Medications</a></li>
+                  <li class="nav-item"><a class="nav-link" data-coreui-toggle="tab" onclick="load_vital_signs('health')" href="#vital_sign_panel" role="tab">
+                      <svg class="icon me-2">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-media-play"></use>
+                      </svg>Patient Health Issues</a></li>
+                  <li class="nav-item"><a class="nav-link" onclick="load_patient_abnormalities()" data-coreui-toggle="tab" href="#vital_sign_panel" role="tab">
+                      <svg class="icon me-2">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-media-play"></use>
+                      </svg>Patient Abnormalities<span id="non_ab" style="color:red"></span></a></li>
+
+                </ul>
+                <div class="tab-content rounded-bottom">
+                  <div class="tab-pane p-3 active preview" role="tabpanel" id="main_pannel">
+
+
+                  </div>
+                </div>
+              </div>
+          <!-- /.row-->
+{% endblock %}

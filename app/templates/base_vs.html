@@ -44,20 +44,6 @@
     <link href="{{url_for('static',filename='css/examples.css')}}" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics-->
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
-
-    <link type="text/css"  rel="stylesheet" href="{{ url_for('static', filename='css/charts/chart.css') }}"/>
-    <link type="text/css"  rel="stylesheet" href="{{ url_for('static', filename='css/charts/xcharts.min.css') }}"/>
-    <link type="text/css"  rel="stylesheet" href="{{ url_for('static', filename='css/charts/bootstrap.min.css') }}"/>
-    <link type="text/css"  rel="stylesheet" href="{{ url_for('static', filename='css/daterangepicker.css') }}"/>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="{{ url_for('static', filename='js/charts/d3.v2.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/charts/sugar.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/charts/xcharts.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/charts/script.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/daterangepicker.js') }}"></script>
-
-
     <script>
       window.dataLayer = window.dataLayer || [];
 
@@ -70,9 +56,9 @@
       // Bootstrap ID
       gtag('config', 'UA-118965717-5');
     </script>
-<!--    <link href="{{url_for('static',filename='vendors/@coreui/chartjs/css/coreui-chartjs.css')}}" rel="stylesheet">-->
+    <link href="{{url_for('static',filename='vendors/@coreui/chartjs/css/coreui-chartjs.css')}}" rel="stylesheet">
   </head>
-  <body onload="load_vital_signs_chart()">
+  <body onload="load_vital_signs('temperature')">
 
   <div id="rasa-chat-widget" data-websocket-url="http://154.53.40.198:80"></div>
 <script src="https://unpkg.com/@rasahq/rasa-chat" type="application/javascript"></script>
@@ -146,12 +132,12 @@
     <script src="{{url_for('static',filename='vendors/@coreui/coreui/js/coreui.bundle.min.js')}}"></script>
     <script src="{{url_for('static',filename='vendors/simplebar/js/simplebar.min.js')}}"></script>
     <!-- Plugins and scripts required by this view-->
-<!--    <script src="{{url_for('static',filename='vendors/chart.js/js/chart.min.js')}}"></script>-->
+    <script src="{{url_for('static',filename='vendors/chart.js/js/chart.min.js')}}"></script>
     <script src="{{url_for('static',filename='js/vital_signs.js')}}"></script>
-<!--    <script src="{{url_for('static',filename='vendors/@coreui/chartjs/js/coreui-chartjs.js')}}"></script>-->
+    <script src="{{url_for('static',filename='vendors/@coreui/chartjs/js/coreui-chartjs.js')}}"></script>
     <script src="{{url_for('static',filename='vendors/@coreui/utils/js/coreui-utils.js')}}"></script>
     <script src="{{url_for('static',filename='js/main.js')}}"></script>
-<!--    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
     </script>
 

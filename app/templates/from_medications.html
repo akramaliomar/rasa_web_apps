@@ -1,0 +1,58 @@
+ <table id="example2" class="display" style="width:100%">
+			   <thead>
+			   		<tr>
+                       <th>Age</th>
+						 <th>Temperature</th>
+						 <th>Heart Rate</th>
+						 <th>Respiration</th>
+						 <th>Spo2</th>
+						 <th>Pressure</th>
+							<th width="40px"><input class="flat-red" name="all2" type="checkbox"/></th>
+                    </tr>
+   				</thead>
+				<tbody>
+
+				 {% for row in recommendations %}
+       {% if row["maxage"]>=12 %}
+            {% set maxage = ((row["maxage"]/12)|int) ~ " Years" %}
+        {% else %}
+            {% set maxage = row["maxage"] ~ " Months" %}
+        {% endif %}
+
+            {% if row["minage"]>=12 %}
+                {% set minage = ((row["minage"]/12)|int) ~ " Years" %}
+            {% else %}
+                {% set minage = row["minage"] ~ " Months" %}
+            {% endif %}
+            {% set diagID = row["diagnosisID"] %}
+
+            {% set age = row["ageName"]%}
+            {% set tempr = row["btName"] %}
+            {% set hr = row["hrName"] %}
+            {% set resp = row["respName"] %}
+            {% set sp = row["spName"] %}
+            {% set pr = row["btName"]%}
+
+        <tr>
+          <td>{{row["ageName"]}}[{{minage}} - {{maxage}}]</td>
+          <td>{{row["btName"]}}</td>
+          <td>{{row["hrName"]}}</td>
+          <td>{{row["respName"]}}</td>
+          <td>{{row["spName"]}}</td>
+          <td>{{row["prName"]}}</td>
+			<td><input class="chk" style="margin: auto"  type="checkbox"  name="ss" value="{{row['diagnosisID']}}" /></td>
+        </tr>
+      {% endfor %}
+				</tbody>
+   				<tfoot>
+					<tr>
+						<th>Age</th>
+						<th>Temperature</th>
+						 <th>Heart Rate</th>
+						 <th>Respiration</th>
+						 <th>Spo2</th>
+						 <th>Pressure</th>
+                        <th width="40px"><input class="flat-red" name="all22" type="checkbox"/></th>
+                    </tr>
+				</tfoot>
+			</table>

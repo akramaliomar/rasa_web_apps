@@ -1,0 +1,43 @@
+ <form class="row justify-content-end g-3 needs-validation" novalidate="">
+                          <div class="col-md-6">
+                            <label class="form-label" for="description">Description<span id="description-info" class="info"></span></label>
+                            <input class="form-control InputBox" id="description" type="text" placeholder="Enter Description" required="">
+                            <div class="valid-feedback">Looks good!</div>
+                          </div>
+                          <div class="col-md-6">
+                            <label class="form-label" for="reco_type">Vital Sign <span id="reco_type-info" class="info"></span></label>
+                            <select class="form-select InputBox" id="reco_type"  required="">
+                                <option selected="" disabled="" value="">Choose ..</option>
+                                <option value="Temperature">Temperature</option>
+                                <option value="Spo2">Spo2</option>
+                                <option value="Heart Rate">Heart Rate</option>
+                                <option value="Respiration">Respiration</option>
+                                <option value="Pressure">Pressure</option>
+                            </select>
+                          </div>
+                          <div class="col-md-6">
+                            <label class="form-label" for="context">Context <span id="context-info" class="info"></span></label>
+                            <select class="form-select InputBox" id="context"  required="">
+                                <option selected="" disabled="" value="">Choose Context</option>
+                                <option value="Home">Home</option>
+                                <option value="Medical Center">Medical Center</option>
+                                <option value="Ambulatory">Ambulatory</option>
+                                <option value="any">Any</option>
+                            </select>
+                          </div>
+                          <div class="col-md-6">
+                            <label class="form-label" for="health">Not Recommended for these Health Issues  <span id="health-info" class="info"></span></label>
+                            <select class="form-select" id="health" multiple="" aria-label="multiple select example">
+                                <option style="padding-top:5px;padding-bottom:5px; font-size:0.8em  " value="" >Hold down the control (ctrl) button to select multiple options</option>
+
+                                {% for x in health %}
+                                      <option style="border-top: 1px solid #ccc; color: blue; font-style:italic" value='{{x["healthID"]}}'>>> {{x["description"]}}</option>
+                                  {% endfor %}
+                            </select>
+                          </div>
+
+                          <div class="col-md-3 ">
+                              <button onclick="save_anomaly_recommendation('{{diagnID}}')" data-coreui-whatever="@getbootstrap" class="btn btn-primary" style="float:right" type="button">Save</button>
+
+                          </div>
+                        </form>

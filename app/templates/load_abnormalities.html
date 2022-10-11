@@ -1,0 +1,89 @@
+
+       <div class="modal fade " id="medicationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-fullscreen">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="medModalLabel">Medication Panel</h5>
+                                <button class="btn-close" type="button" data-coreui-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  <div id="med_content">
+                                  </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+        <p><span style="float:left">List of Vital Signs</span>
+                        <button data-coreui-toggle="modal" onclick="load_recommendation_form()" data-coreui-target="#exampleModal" data-coreui-whatever="@getbootstrap" class="btn btn-primary" style="float:right" type="button">Add new</button>
+                        <button onclick="load_from_sensor()" data-coreui-whatever="@getbootstrap" class="btn btn-primary" style="float:right" type="button">Load from Sensor Data</button>
+
+                    </p><br>
+<table id="abnormalities" class="display" style="width:100%">
+<thead>
+<tr>
+ <th>Age</th>
+ <th>Temperature</th>
+ <th>Heart Rate</th>
+ <th>Respiration</th>
+ <th>Spo2</th>
+ <th>Pressure</th>
+ <th><i class="fas fa-notes-medical" style="color:red"></i></th>
+ <th><i class="fa fa-remove" style="color:red"></i></th>
+  </tr>
+</thead>
+  <tbody>
+      {% for row in abnormalities %}
+       {% if row["maxage"]>=12 %}
+            {% set maxage = ((row["maxage"]/12)|int) ~ " Years" %}
+        {% else %}
+            {% set maxage = row["maxage"] ~ " Months" %}
+        {% endif %}
+
+            {% if row["minage"]>=12 %}
+                {% set minage = ((row["minage"]/12)|int) ~ " Years" %}
+            {% else %}
+                {% set minage = row["minage"] ~ " Months" %}
+            {% endif %}
+            {% set diagID = row["diagnosisID"] %}
+
+            {% set age = row["ageName"]%}
+            {% set tempr = row["btName"] %}
+            {% set hr = row["hrName"] %}
+            {% set resp = row["respName"] %}
+            {% set sp = row["spName"] %}
+            {% set pr = row["btName"]%}
+
+        <tr>
+          <td>{{row["ageName"]}}[{{minage}} - {{maxage}}]</td>
+          <td>{{row["btName"]}}[{{row["btmin"]}} - {{row["btmax"]}}]</td>
+          <td>{{row["hrName"]}}[{{row["hrmin"]}} - {{row["hrmax"]}}]</td>
+          <td>{{row["respName"]}}[{{row["minresp"]}} - {{row["maxresp"]}}]</td>
+          <td>{{row["spName"]}}[{{row["minsp"]}} - {{row["maxsp"]}}]</td>
+          <td>{{row["prName"]}}[{{row["minpr"]}} - {{row["maxpr"]}}]</td>
+          <td><button onclick="provide_medications('{{diagID}}', '{{age}}', '{{tempr}}', '{{hr}}', '{{resp}}', '{{sp}}','{{pr}}')" data-coreui-toggle="modal" data-coreui-target="#medicationModal" data-coreui-whatever="@getbootstrap" onclick="provide_medications('{{diagID}}')" class="btn"><i class="fas fa-notes-medical" style="color:red"></i></button></td>
+          <td><i class="fa fa-remove" style="color:red"></i></td>
+        </tr>
+      {% endfor %}
+  </tbody>
+    <tfoot>
+<tr>
+ <th>Age</th>
+ <th>Temperature</th>
+ <th>Heart Rate</th>
+ <th>Respiration</th>
+ <th>Spo2</th>
+ <th>Pressure</th>
+ <th><i class="fas fa-notes-medical" style="color:red"></i></th>
+ <th><i class="fa fa-remove" style="color:red"></i></th>
+  </tr>
+</tfoot>
+</table>
+
+
+
+
+
+

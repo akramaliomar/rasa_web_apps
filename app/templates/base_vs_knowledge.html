@@ -42,23 +42,25 @@
     <!-- We use those styles to show code examples, you should remove them in your application.-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/themes/prism.css">
     <link href="{{url_for('static',filename='css/examples.css')}}" rel="stylesheet">
+<!--    <link href="{{url_for('static',filename='css/jquery.dataTables.min.css')}}" rel="stylesheet">-->
     <!-- Global site tag (gtag.js) - Google Analytics-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+<script src="{{url_for('static',filename='js/font_awasome.js')}}" crossorigin='anonymous'></script>
 
-    <link type="text/css"  rel="stylesheet" href="{{ url_for('static', filename='css/charts/chart.css') }}"/>
-    <link type="text/css"  rel="stylesheet" href="{{ url_for('static', filename='css/charts/xcharts.min.css') }}"/>
-    <link type="text/css"  rel="stylesheet" href="{{ url_for('static', filename='css/charts/bootstrap.min.css') }}"/>
-    <link type="text/css"  rel="stylesheet" href="{{ url_for('static', filename='css/daterangepicker.css') }}"/>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="{{ url_for('static', filename='js/charts/d3.v2.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/charts/sugar.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/charts/xcharts.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/charts/script.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/daterangepicker.js') }}"></script>
-
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 
     <script>
+<!--$(document).ready(function() {-->
+<!--    alert($('#example'));-->
+<!--  $('#example').DataTable();-->
+
+<!--} );-->
+    </script>
+    <script>
+
       window.dataLayer = window.dataLayer || [];
 
       function gtag() {
@@ -69,10 +71,19 @@
       gtag('config', 'UA-118965717-3');
       // Bootstrap ID
       gtag('config', 'UA-118965717-5');
+
+      $(document).ready(function () {
+        $('#recommend').DataTable();
+      });
     </script>
-<!--    <link href="{{url_for('static',filename='vendors/@coreui/chartjs/css/coreui-chartjs.css')}}" rel="stylesheet">-->
+
+    <link href="{{url_for('static',filename='vendors/@coreui/chartjs/css/coreui-chartjs.css')}}" rel="stylesheet">
+ <style type="text/css">
+     table.dataTable td { font-size: 0.8em !important;}
+     table.dataTable tr.dtrg-level-0 td { font-size: 0.8em !important; }
+ </style>
   </head>
-  <body onload="load_vital_signs_chart()">
+  <body onload="load_recommendations()">
 
   <div id="rasa-chat-widget" data-websocket-url="http://154.53.40.198:80"></div>
 <script src="https://unpkg.com/@rasahq/rasa-chat" type="application/javascript"></script>
@@ -106,7 +117,6 @@
                 <div class="avatar avatar-md"><img class="avatar-img" src="{{url_for('static',filename='assets/img/avatars/8.jpg')}}" alt="user@email.com"></div>
               </a>
               <div class="dropdown-menu dropdown-menu-end pt-0">
-
                 <div class="dropdown-header bg-light py-2">
                   <a class="dropdown-item" href="#">
                   <svg class="icon me-2">
@@ -146,12 +156,14 @@
     <script src="{{url_for('static',filename='vendors/@coreui/coreui/js/coreui.bundle.min.js')}}"></script>
     <script src="{{url_for('static',filename='vendors/simplebar/js/simplebar.min.js')}}"></script>
     <!-- Plugins and scripts required by this view-->
-<!--    <script src="{{url_for('static',filename='vendors/chart.js/js/chart.min.js')}}"></script>-->
-    <script src="{{url_for('static',filename='js/vital_signs.js')}}"></script>
-<!--    <script src="{{url_for('static',filename='vendors/@coreui/chartjs/js/coreui-chartjs.js')}}"></script>-->
+    <script src="{{url_for('static',filename='vendors/chart.js/js/chart.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/knowledge_based.js')}}"></script>
+    <script src="{{url_for('static',filename='vendors/@coreui/chartjs/js/coreui-chartjs.js')}}"></script>
     <script src="{{url_for('static',filename='vendors/@coreui/utils/js/coreui-utils.js')}}"></script>
     <script src="{{url_for('static',filename='js/main.js')}}"></script>
-<!--    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
+<!--    <script src="{{url_for('static',filename='js/jquery.dataTables.min.js')}}"></script>-->
+<!--    <script src="{{url_for('static',filename='js/jquery-3.5.1.js')}}"></script>-->
+
     <script>
     </script>
 
