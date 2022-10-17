@@ -288,22 +288,23 @@ def list_anomaly_recommendations(diagnID):
         with conn:
             with conn.cursor(dictionary=True) as cursor:
                 result = cursor.execute('SELECT *FROM recommendations INNER JOIN medications USING(recoID) WHERE '
-                                        'diagnosisID=%s ORDER BY recoType', (diagnID,))
+                                        'diagnosisID=%s ORDER BY sequenceNo ASC,recoType ASC', (diagnID,))
                 rows = cursor.fetchall()
                 if len(rows) > 0:
                     return rows
                 else:
-                    rows = []
+                    rows = [[]]
                 return rows
     except mysql.connector.Error as e:
-        return []
+        return [[]]
 
 
 def list_from_medication(diagnID, context):
     try:
         conn = open_connection()
         with conn:
-            vs_ls = "\"Null\"" + ','.join(fetch_abnormal_vs(diagnID))
+            vs_ls = "\"Null\"," + ','.join(fetch_abnormal_vs(diagnID))
+
             with conn.cursor(dictionary=True) as cursor:
                 result = cursor.execute('SELECT ageName, minage, maxage, hrName, hrmax, hrmin, respName, minresp, '
                                         'maxresp, spName, minsp, maxsp, btName, btmax, btmin, prName, minpr, maxpr, '
@@ -321,10 +322,10 @@ def list_from_medication(diagnID, context):
                 if len(rows) > 0:
                     return rows
                 else:
-                    rows = []
+                    rows = [[]]
                 return rows
     except mysql.connector.Error as e:
-        return []
+        return [[]]
 
 
 def list_abnormalities():
@@ -501,6 +502,41 @@ def save_new_recommendation(description, reco_type, context, health, diagnID, us
         return str(e)
 
 
+def save_new_recommendation(description, reco_type, context, health, diagnID, userID):
+    try:
+        conn = open_connection()
+        with conn:
+            with conn.cursor(dictionary=True) as cursor:
+                check = cursor.execute('SELECT *FROM recommendations WHERE recoDescription=%s', (description,))
+                rows = cursor.fetchall()
+                if len(rows) > 0:
+                    return "exist"
+                else:
+                    result = cursor.execute(
+                        'INSERT INTO recommendations(recoDescription, recoType, context) VALUES(%s, %s, %s)',
+                        (description, reco_type, context))
+                    conn.commit()
+                    recoID = cursor.lastrowid
+                    for healthID in health:
+                        result = cursor.execute(
+                            'INSERT INTO exception_deseases(healthID, recoID) VALUES(%s, %s)',
+                            (healthID, recoID))
+                        conn.commit()
+                    check = cursor.execute(
+                        'SELECT IFNULL(MAX(sequenceNo),0) as maxno FROM medications WHERE diagnosisID=%s', (diagnID,))
+                    rows = cursor.fetchall()
+                    sequenceNo = 0;
+                    for row in rows:
+                        sequenceNo = row["maxno"] + 1
+                    result = cursor.execute(
+                        'INSERT INTO medications(diagnosisID, recoID, userID, sequenceNo) VALUES(%s, %s, %s, %s)',
+                        (diagnID, recoID, userID, sequenceNo))
+                    conn.commit()
+                    return "success"
+    except mysql.connector.Error as e:
+        return str(e)
+
+
 def save_new_recommendation_list(diagnID, recolist, userID):
     try:
         conn = open_connection()
@@ -527,6 +563,41 @@ def save_new_recommendation_list(diagnID, recolist, userID):
                 return "success"
     except mysql.connector.Error as e:
         return ",".join(recolist)
+
+
+def save_new_recommendation_list_from_med(diagnID, diaglist, userID):
+    try:
+        conn = open_connection()
+        with conn:
+            with conn.cursor(dictionary=True) as cursor:
+                check = cursor.execute(
+                    'SELECT IFNULL(MAX(sequenceNo),0) as maxno FROM medications WHERE diagnosisID=%s', (diagnID,))
+                rows = cursor.fetchall()
+                sequenceNo = 0;
+                for row in rows:
+                    sequenceNo = row["maxno"] + 1
+
+                for diagID in diaglist:
+                    diagID = int(diagID)
+                    check = cursor.execute('SELECT * from medications WHERE diagnosisID=%s',
+                                           (diagID,))
+                    rows = cursor.fetchall()
+                    for row in rows:
+                        recoID = row["recoID"]
+                        check = cursor.execute('SELECT * from medications WHERE diagnosisID=%s AND recoID=%s',
+                                                   (diagnID, recoID))
+                        rows1 = cursor.fetchall()
+                        if len(rows1) > 0:
+                            continue
+                        result = cursor.execute(
+                                'INSERT INTO medications(diagnosisID, recoID, userID, sequenceNo) VALUES(%s, %s, %s, '
+                                '%s)',
+                                (diagnID, recoID, userID, sequenceNo))
+                        conn.commit()
+                return "success"
+
+    except mysql.connector.Error as e:
+        return str(e)
 
 
 def db_get_reload_vs():
@@ -645,6 +716,30 @@ def add_abnormality(heart, spo2, pressure, temperature, respiration):
             return count
     except mysql.connector.Error as e:
         return count
+
+
+def add_new_abnormality(heart, spo2, pressure, temperature, respiration):
+    diagnosisID = 0
+    conn = open_connection()
+    try:
+        with conn:
+            with conn.cursor(dictionary=True) as cursor:
+                result = cursor.execute('SELECT diagnosisID FROM symptomes_abmonality WHERE hrID=%s AND spID=%s AND '
+                                        'prID=%s AND '
+                                        'respID=%s AND btID=%s', (heart, spo2, pressure, respiration, temperature))
+                rows = cursor.fetchall()
+                if len(rows) == 0:
+                    cursor.execute(
+                        'INSERT INTO symptomes_abmonality(hrID, spID, prID, respID, btID) VALUES(%s, %s, %s, %s, %s)',
+                        (heart, spo2, pressure, respiration, temperature))
+                    conn.commit()
+                    diagnosisID = cursor.lastrowid
+                else:
+                    diagnosisID = rows[0]["diagnosisID"]
+            conn.close()
+            return diagnosisID
+    except mysql.connector.Error as e:
+        return 0
 
 
 def check_medication(diagnosis):

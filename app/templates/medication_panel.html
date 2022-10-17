@@ -43,7 +43,8 @@ table.example1 td,th{
 			<button type="button" onClick="editMembersList()" class="btn btn-danger"><i class="fa fa-fw fa-angle-double-right"></i></button>
 			<br/>
 			<br/>
-			<button type="button" onClick="update_medication('{{diagnID}}')" class="btn btn-success"><i class="fa fa-fw fa-angle-double-left"></i></button>
+			<button id="from_recom" type="button" onClick="update_medication('{{diagnID}}')" class="btn btn-success"><i class="fa fa-fw fa-angle-double-left"></i></button>
+			<button id="from_med" type="button" onClick="update_medication_from_med('{{diagnID}}')" class="btn btn-success"><i class="fa fa-fw fa-angle-double-left"></i></button>
 		</td>
 		<td width="45%" id="loadFromID">
 

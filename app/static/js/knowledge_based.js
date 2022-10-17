@@ -180,6 +180,34 @@ function update_medication(diagnID){
 }
 
 
+function update_medication_from_med(diagnID){
+    alert("check");
+     var yourArray=[];
+	$("input:checkbox[name=diagnosisID]:checked").each(function(){
+            yourArray.push($(this).val());
+        });
+        if(yourArray.length>0){
+             diaglist = JSON.stringify(yourArray);
+            $.ajax({
+            url:"/update_medication_from_med",
+            type:"POST",
+            data:{diagnID:diagnID, diaglist:diaglist},
+            success:function(data){
+                      alert(data);
+                if(data=="success"){
+                    alert("Success");
+                    fetch_anomaly_recommendations(diagnID);
+                    fetch_recommendation_from(diagnID);
+                }
+
+            }
+            });
+	    }else{
+	        alert("Please tick at least one record");
+	    }
+}
+
+
 
 function load_recommendation_form(){
 		$.ajax({
@@ -272,6 +300,9 @@ $.ajax({
 			$('#medModalLabel').html(str);
 			fetch_recommendation_from(diagnID);
 			fetch_anomaly_recommendations(diagnID);
+			$("#from_recom").show();
+			$("#from_med").hide();
+
 			// $('#example1').DataTable();
 			// $('#example2').DataTable();
 	},
@@ -286,18 +317,29 @@ function fetch_recommendation_from(diagnID){
 //health:JSON.stringify($("#health").val())
         if($("#from_reco").val()==1){
             var url = "/from_medication";
+            $("#from_recom").hide();
+			$("#from_med").show();
+
         }else if ($("#from_reco").val()==2){
             var url = "/new_recommendations";
+            $("#from_recom").hide();
+			$("#from_med").hide();
+
         }else{
             var url = "/from_recommendations";
+            $("#from_recom").show();
+			$("#from_med").hide();
+
         }
 $.ajax({
 	method: "POST",
 	url: url,
 	data: {diagnID:diagnID, context:"Any"},
 	success: function(data) {
+
 			$('#loadFromID').html(data);
 			$('#example2').DataTable();
+			no_medicated_abnormalities();
 	},
 	error: function(err) {
 	    alert(err)

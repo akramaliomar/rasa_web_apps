@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request, Blueprint
-from .db_config import db_add_vs, db_get_vs, db_aggregated_vs, db_get_rand_vs, read_data_from_sensor, \
-    save_data_from_sensor
-from .db_config import read_recent_data_from_sensor, get_device
+from .db_config import db_add_vs, db_get_vs, db_aggregated_vs, db_get_rand_vs, read_data_from_sensor, save_data_from_sensor
+from .db_config import read_recent_data_from_sensor, get_device, vital_signs_anomalies, add_new_abnormality, list_anomaly_recommendations
 import json
 import requests
 import mysql.connector
@@ -57,6 +56,29 @@ def predict():
 @api.route('/fetch_vs', methods=['GET'])
 def get_vital_signs():
     return db_get_vs()
+
+
+@api.route('/get_recommendtions_vs', methods=['GET'])
+def get__recommendations_vital_signs():
+    device_no = "DVS0003"
+    age = "Adult"
+    deviceID = get_device(device_no)
+    vital_signs = read_recent_data_from_sensor(deviceID)
+    # return jsonify(vital_signs)
+    # vital_signs = db_get_reload_vs()
+    if len(vital_signs[0]) > 0:
+        anomalies = vital_signs_anomalies(vital_signs[0]["tempr"], vital_signs[0]["hr"], vital_signs[0]["resp"],
+                                          vital_signs[0]["spo2"], "Normal", age)
+        # return jsonify(anomalies)
+        if len(anomalies) > 0:
+            diagID = add_new_abnormality(anomalies[0]["hrID"], anomalies[0]["spID"], anomalies[0]["prID"], anomalies[0]["btID"], anomalies[0]["respID"])
+            recommendations = list_anomaly_recommendations(diagID)
+            return jsonify(recommendations)
+            # recommendations = fetch_recommendations_for_anomalies(anomalies[0]["prID"], anomalies[0]["spID"],
+            # anomalies[0]["hrID"], anomalies[0]["respID"], anomalies[0]["btID"])
+        else:
+            return jsonify([["no readings"]])
+    return jsonify([["no readings"]])
 
 
 @api.route('/fetch_aggr_vs', methods=['GET'])

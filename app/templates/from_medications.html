@@ -12,7 +12,7 @@
    				</thead>
 				<tbody>
 
-				 {% for row in recommendations %}
+				 {% for row in medications %}
        {% if row["maxage"]>=12 %}
             {% set maxage = ((row["maxage"]/12)|int) ~ " Years" %}
         {% else %}
@@ -40,7 +40,7 @@
           <td>{{row["respName"]}}</td>
           <td>{{row["spName"]}}</td>
           <td>{{row["prName"]}}</td>
-			<td><input class="chk" style="margin: auto"  type="checkbox"  name="ss" value="{{row['diagnosisID']}}" /></td>
+			<td><input class="chk" style="margin: auto"  type="checkbox"  name="diagnosisID" value="{{row['diagnosisID']}}" /></td>
         </tr>
       {% endfor %}
 				</tbody>

@@ -2,7 +2,7 @@ from flask import Flask, jsonify, redirect, url_for, render_template, request, s
 from .db_config import fetch_health, list_recommendations, save_recommendation, no_medicated_abnormalities
 from .db_config import check_medication, check_abnormality, list_abnormalities, load_new_abnormalities_from_sensor
 from .db_config import list_from_recommendations, fetch_abnormal_vs, list_from_medication, list_anomaly_recommendations
-from .db_config import save_new_recommendation, save_new_recommendation_list
+from .db_config import save_new_recommendation, save_new_recommendation_list, save_new_recommendation_list_from_med
 from datetime import timedelta
 import json
 import requests
@@ -51,7 +51,7 @@ def provide_medications():
         if request.method == "POST":
             diagnID = request.form["diagnID"]
             # abnormalities = list_abnormalities()
-            return render_template("medication_panel.html",diagnID=diagnID)
+            return render_template("medication_panel.html", diagnID=diagnID)
         else:
             return "no data"
     else:
@@ -67,7 +67,7 @@ def load_from_recommendations():
             recommendations = list_from_recommendations(diagnID, context)
             # return recommendations
             # return fetch_abnormal_vs(diagnID)
-            return render_template("from_recommendations.html",recommendations=recommendations)
+            return render_template("from_recommendations.html", recommendations=recommendations)
         else:
             return "no data"
     else:
@@ -81,7 +81,7 @@ def load_from_medication():
             diagnID = request.form["diagnID"]
             context = request.form["context"]
             medications = list_from_medication(diagnID, context)
-            # return recommendations
+            # return medications
             # return fetch_abnormal_vs(diagnID)
             return render_template("from_medications.html", medications=medications)
         else:
@@ -115,11 +115,12 @@ def new_recommnedation_form():
             # return recommendations
             # return fetch_abnormal_vs(diagnID)
             health = fetch_health()
-            return render_template("new_recommendation_form.html",diagnID=diagnID, health = health)
+            return render_template("new_recommendation_form.html", diagnID=diagnID, health=health)
         else:
             return "no data"
     else:
         return redirect(url_for("login"))
+
 
 # @manage_knowledge_based.route('/load_abnormalities', methods=['POST', 'GET'])
 # def fetch_abnormalities():
@@ -134,8 +135,8 @@ def new_recommnedation_form():
 def generate_from_sensor():
     if "username" in session:
         total = load_new_abnormalities_from_sensor()
-        if (total>0):
-            return str(total)+ " record(s) added"
+        if (total > 0):
+            return str(total) + " record(s) added"
         else:
             return "No record added"
     else:
@@ -182,7 +183,7 @@ def save_anomaly_recommendation():
             username = session["username"]
 
             health = json.loads(request.form["health"])
-            status = save_new_recommendation(description, reco_type, context, health,diagnID, username )
+            status = save_new_recommendation(description, reco_type, context, health, diagnID, username)
             return status
         else:
             return "no submission"
@@ -199,6 +200,22 @@ def save_anomaly_medication():
             recolist = json.loads(request.form["recolist"])
             username = session["username"]
             status = save_new_recommendation_list(diagnID, recolist, username)
+            return status
+        else:
+            return "no submission"
+    else:
+        return redirect(url_for("login"))
+
+
+@manage_knowledge_based.route('/update_medication_from_med', methods=['POST', 'GET'])
+def save_anomaly_medication_from_med():
+    if "username" in session:
+        if request.method == "POST":
+            diagnID = request.form["diagnID"]
+            # recolist = request.form["recolist"]
+            diaglist = json.loads(request.form["diaglist"])
+            username = session["username"]
+            status = save_new_recommendation_list_from_med(diagnID, diaglist, username)
             return status
         else:
             return "no submission"
