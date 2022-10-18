@@ -46,21 +46,45 @@ def predict():
         # print("Vital Sign: ", vital_signs)
         # print("Probability: ", probability)
         if vital_signs == 1:
-            return "Abnormal"
+            return jsonify("Abnormal")
         elif vital_signs == 0:
-            return "Normal"
+            return jsonify("Normal")
     else:
-        "No Data"
+        return jsonify("No Data")
 
 
-@api.route('/fetch_vs', methods=['GET'])
+@api.route('/fetch_vs', methods=['POST', 'GET'])
 def get_vital_signs():
-    return db_get_vs()
+    if not request.is_json:
+        return jsonify([[{"tempr": "Unknown", "resp": "Unknown", "hr": "Unknown", "spo2": "Unknown"}],
+                        [{"btName": "Unknown", "respName": "Unknown", "hrName": "Unknown", "spName": "Unknown"}]]), 400
+    json_data = request.get_json()
+    device_no = json_data["deviceNo"]
+    age = "Adult"
+    # device_no = "DVS0003"
+    deviceID = get_device(device_no)
+    vital_signs = read_recent_data_from_sensor(deviceID)
+    if len(vital_signs[0]) > 1:
+        anomalies = vital_signs_anomalies(vital_signs[0]["tempr"], vital_signs[0]["hr"], vital_signs[0]["resp"],
+                                          vital_signs[0]["spo2"], "Normal", age)
+        if len(anomalies) > 0:
+            readings  = [vital_signs, anomalies]
+            return jsonify(readings)
+        else:
+            return jsonify([vital_signs,
+                            [{"btName": "Unknown", "respName": "Unknown", "hrName": "Unknown", "spName": "Unknown"}]])
+    else:
+        return jsonify([[{"tempr": "Unknown", "resp": "Unknown", "hr": "Unknown", "spo2": "Unknown"}],
+                        [{"btName": "Unknown", "respName": "Unknown", "hrName": "Unknown", "spName": "Unknown"}]])
 
 
-@api.route('/get_recommendtions_vs', methods=['GET'])
-def get__recommendations_vital_signs():
-    device_no = "DVS0003"
+@api.route('/get_recommendtions_vs', methods=['POST', 'GET'])
+def get_recommendations_vital_signs():
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+    json_data = request.get_json()
+    device_no = json_data["deviceNo"]
+    # device_no = "DVS0003"
     age = "Adult"
     deviceID = get_device(device_no)
     vital_signs = read_recent_data_from_sensor(deviceID)

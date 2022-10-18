@@ -3,6 +3,7 @@ from .db_config import fetch_health, list_recommendations, save_recommendation, 
 from .db_config import check_medication, check_abnormality, list_abnormalities, load_new_abnormalities_from_sensor
 from .db_config import list_from_recommendations, fetch_abnormal_vs, list_from_medication, list_anomaly_recommendations
 from .db_config import save_new_recommendation, save_new_recommendation_list, save_new_recommendation_list_from_med
+from .db_config import delete_medication
 from datetime import timedelta
 import json
 import requests
@@ -101,6 +102,19 @@ def load_anomaly_recommendations():
             return render_template("anomaly_recommendations.html", recommendations=recommendations)
         else:
             return "no data"
+    else:
+        return redirect(url_for("login"))
+
+
+@manage_knowledge_based.route('/delete_medication', methods=['POST', 'GET'])
+def delete_anomaly_recommendations():
+    if "username" in session:
+        if request.method == "POST":
+            medID = int(request.form["medID"])
+            delete = delete_medication(medID)
+            return delete
+        else:
+            return "fail"
     else:
         return redirect(url_for("login"))
 

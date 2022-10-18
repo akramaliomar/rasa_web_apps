@@ -10,12 +10,14 @@
    				</thead>
 				<tbody>
                  {% for row in recommendations %}
+                 	{% set medID = row['medID'] %}
+                 	{% set diagnosisID = row['diagnosisID'] %}
 					<tr>
 						<td>{{row["recoDescription"]}}</td>
 						<td>{{row["recoType"]}}</td>
 						<td>{{row["context"]}}</td>
 						<td><input class="flat-red" name="all22" type="checkbox"/></td>
-         				<td><i class="fa fa-remove" style="color:red"></i></td>
+         				<td><button onclick="delete_medication('{{medID}}', '{{diagnosisID}}')"><i class="fa fa-remove" style="color:red"></i></button></td>
 					</tr>
                  {% endfor %}
 				</tbody>

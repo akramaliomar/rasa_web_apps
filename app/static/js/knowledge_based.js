@@ -364,6 +364,31 @@ $.ajax({
 });
 }
 
+
+function delete_medication(medID, diagnID){
+    if(confirm("Are you sure you want to delete?")){
+    $.ajax({
+        method: "POST",
+        url: "/delete_medication",
+        data: {medID:medID},
+        success: function(data) {
+        alert(data);
+        if(data="success"){
+//              alert("Operation Success");
+                fetch_recommendation_from(diagnID);
+                fetch_anomaly_recommendations(diagnID);
+        }else{
+                alert("Operation Failed");
+        }
+        },
+        error: function(err) {
+            alert(err)
+            //console.log(err);
+        }
+    });
+    }
+}
+
 $(function(){
 	$('div[onload]').trigger('onload');
 });

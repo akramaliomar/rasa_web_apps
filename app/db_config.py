@@ -299,6 +299,18 @@ def list_anomaly_recommendations(diagnID):
         return [[]]
 
 
+def delete_medication(medID):
+    try:
+        conn = open_connection()
+        with conn:
+            with conn.cursor(dictionary=True) as cursor:
+                result = cursor.execute('DELETE FROM medications WHERE medID=%s', (medID,))
+                conn.commit()
+                return "success"
+    except mysql.connector.Error as e:
+        return str(e)
+
+
 def list_from_medication(diagnID, context):
     try:
         conn = open_connection()
