@@ -45,6 +45,15 @@ def fetch_abnormalities():
     else:
         return redirect(url_for("login"))
 
+# @manage_knowledge_based.route('/load_abnormalities1', methods=['POST', 'GET'])
+# def fetch_abnormalities1():
+#     if request.method == "POST":
+#         abnormalities = list_abnormalities()
+#         return jsonify(abnormalities)
+#         # return render_template("load_abnormalities.html", abnormalities=abnormalities)
+#     else:
+#         return "no data"
+#
 
 @manage_knowledge_based.route('/medication_panel', methods=['POST', 'GET'])
 def provide_medications():
@@ -58,13 +67,26 @@ def provide_medications():
     else:
         return redirect(url_for("login"))
 
-
+# @manage_knowledge_based.route('/from_recommendations_test', methods=['POST', 'GET'])
+# def load_from_recommendations1():
+#     if request.method == "POST":
+#         diagnID = int(request.form["diagnID"])
+#         context = "Any"
+#         # return jsonify({"msg": str(diagnID)})
+#         context = request.form["context"]
+#         recommendations = list_from_recommendations(diagnID, context)
+#         return jsonify(recommendations)
+#         # return recommendations
+#         # return fetch_abnormal_vs(diagnID)
+#     else:
+#         return jsonify({"msg": "no data"})
 @manage_knowledge_based.route('/from_recommendations', methods=['POST', 'GET'])
 def load_from_recommendations():
     if "username" in session:
         if request.method == "POST":
             diagnID = request.form["diagnID"]
-            context = request.form["context"]
+            context = "Any"
+            # context = request.form["context"]
             recommendations = list_from_recommendations(diagnID, context)
             # return recommendations
             # return fetch_abnormal_vs(diagnID)
@@ -73,6 +95,8 @@ def load_from_recommendations():
             return "no data"
     else:
         return redirect(url_for("login"))
+
+
 
 
 @manage_knowledge_based.route('/from_medication', methods=['POST', 'GET'])
