@@ -16,7 +16,7 @@ function validateVs(){
 		$("#minvalue-info").css('color','#F00');
 		valid = false;
 	}
-	if(!$("#maxvalue").val()) {fetch_anomaly_recommendations
+	if(!$("#maxvalue").val()) {
 		$("#maxvalue-info").html("(*)");
 		$("#maxvalue").css('background-color','#FFFFDF');
 		$("#maxvalue-info").css('color','#F00');
@@ -297,6 +297,7 @@ $.ajax({
 	success: function(data) {
 			$('#med_content').html(data);
 			var str = "Age["+ age+"] <----> Temperature["+tempr+"] <----> Breathing Rate["+hr+"] <----> Respiration["+resp+"] <----> Spo2["+sp+"] <----> Pressure ["+pr+"]";
+			var str = "Age["+ age+"] <----> Temperature["+tempr+"] <----> Breathing Rate["+hr+"] <----> Spo2["+sp+"]";
 			$('#medModalLabel').html(str);
 			fetch_recommendation_from(diagnID);
 			fetch_anomaly_recommendations(diagnID);

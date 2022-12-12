@@ -562,6 +562,7 @@ function load_spo2_chart() {
 			data: JSON.stringify({'deviceNo':$("#device_no").val(), 'start': startDate.format('{yyyy}-{MM}-{dd}'), 'end': endDate.format('{yyyy}-{MM}-{dd}')}),
 			dataType: "json",
 			success: function(data) {
+
 				if ((data.indexOf("No record found") > -1) || (data.indexOf("Date must be selected.") > -1)) {
 					$('#spo2_msg').html('<span style="color:red;">' + data + '</span>');
 					$('#spo2_placeholder').hide();
@@ -616,21 +617,21 @@ function load_vital_signs_chart(){
 
              load_heart_chart();
 
-        },100);
-
-        setTimeout(function(){
-                 $("#resp").show();
-
-             load_resp_chart();
-
-        },200);
+        },1000);
 
         setTimeout(function(){
                  $("#spo2").show();
 
              load_spo2_chart();
 
-        },300);
+        },2000);
+//        setTimeout(function(){
+//                 $("#resp").show();
+//
+//             load_resp_chart();
+//
+//        },200);
+
 }
 
 function load_device_data(){
