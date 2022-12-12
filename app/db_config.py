@@ -1,5 +1,6 @@
 import mysql.connector
 from flask import jsonify
+import json
 
 
 def open_connection():
@@ -63,7 +64,7 @@ def get_device_list():
                 result = cursor.execute('SELECT *FROM device_subscription WHERE deviceID IN(SELECT DISTINCT(deviceID) '
                                         'from vital_signs) ORDER BY device_no;')
                 device = cursor.fetchall()
-                if len(device)>0:
+                if len(device) > 0:
                     return device
                 return [[""]]
     except mysql.connector.Error as e:
@@ -88,20 +89,20 @@ def read_recent_data_from_sensor(deviceID):
         return [[str(e)]]
 
 
-def save_data_from_sensor(deviceID, tempr, resp, spo2, hr, pr):
-    try:
-        conn = open_connection()
-        with conn:
-            with conn.cursor(dictionary=True) as cursor:
-                result = cursor.execute(
-                    'INSERT INTO vital_signs(deviceID, hr, spo2, resp, tempr, pressure) VALUES(%s, %s, %s, %s, %s, %s)',
-                    (deviceID, hr, spo2, resp, tempr, pr))
-                conn.commit()
-                vital_signs_id = cursor.lastrowid
-                return str(vital_signs_id)
-
-    except mysql.connector.Error as e:
-        return str(e)
+# def save_data_from_sensor(deviceID, tempr, resp, spo2, hr, pr):
+#     try:
+#         conn = open_connection()
+#         with conn:
+#             with conn.cursor(dictionary=True) as cursor:
+#                 result = cursor.execute(
+#                     'INSERT INTO vital_signs(deviceID, hr, spo2, resp, tempr, pressure) VALUES(%s, %s, %s, %s, %s, %s)',
+#                     (deviceID, hr, spo2, resp, tempr, pr))
+#                 conn.commit()
+#                 vital_signs_id = cursor.lastrowid
+#                 return str(vital_signs_id)
+#
+#     except mysql.connector.Error as e:
+#         return str(e)
 
 
 def check_user(userID, password):
@@ -136,7 +137,20 @@ def get_device_data(deviceID):
     except mysql.connector.Error as e:
         return [[]]
 
+def fetch_devices():
+    try:
+        conn = open_connection()
+        with conn:
+            with conn.cursor(dictionary=True) as cursor:
+                result = cursor.execute('SELECT *FROM device_subscription ORDER BY device_no ASC;')
 
+                devices = cursor.fetchall()
+                if len(devices) > 0:
+                    return devices
+                else:
+                    return []
+    except mysql.connector.Error as e:
+        return []
 def fetch_vital_signs(vital_sign):
     try:
         conn = open_connection()
@@ -282,7 +296,40 @@ def list_from_recommendations(diagnID, context):
         return []
 
 
-def list_anomaly_recommendations(diagnID):
+def list_anomaly_recommendations(diagnID, context, health):
+    try:
+        conn = open_connection()
+        with conn:
+            with conn.cursor(dictionary=True) as cursor:
+                health = "\"Any\"," + ','.join(health)
+
+                result = cursor.execute('SELECT * FROM (SELECT context,diagnosisID,IFNULL(description, "XXX") AS '
+                                        'h_description, recoID, medID, recoDescription, recoType,  sequenceNo FROM '
+                                        'recommendations INNER JOIN medications USING(recoID) LEFT JOIN ('
+                                        'patient_health INNER JOIN exception_deseases USING(healthID)) USING(recoID) '
+                                        'WHERE diagnosisID=%s AND context=%s) AS temp WHERE h_description NOT '
+                                        ' IN(' + health + ')', (diagnID, context))
+
+                # result = cursor.execute('SELECT context,diagnosisID, medID,IFNULL(description, "XXX") AS '
+                #                         'h_description, recoID, medID, recoDescription, recoID, recoType, recoType,  sequenceNo     '
+                #                         'FROM recommendations INNER JOIN medications USING(recoID) LEFT JOIN '
+                #                         '(patient_health INNER JOIN exception_deseases USING(healthID)) USING('
+                #                         'recoID) WHERE diagnosisID=%s AND context=%s) ORDER BY '
+                #                         'sequenceNo ASC,recoType ASC', (diagnID, context))
+                # result = cursor.execute('SELECT recoID FROM '
+                #                         'patient_health INNER JOIN exception_deseases USING(healthID) WHERE '
+                #                         'description IN(' + health + ')')
+                rows = cursor.fetchall()
+                if len(rows) > 0:
+                    return rows
+                else:
+                    rows = [[]]
+                return rows
+    except mysql.connector.Error as e:
+        return str(e)
+
+
+def list_anomaly_recommendations1(diagnID):
     try:
         conn = open_connection()
         with conn:
@@ -298,6 +345,21 @@ def list_anomaly_recommendations(diagnID):
     except mysql.connector.Error as e:
         return [[]]
 
+
+def get_device_logs(deviceID):
+    try:
+        conn = open_connection()
+        with conn:
+            with conn.cursor(dictionary=True) as cursor:
+                result = cursor.execute('SELECT *FROM vital_signs  WHERE  deviceID=%s ORDER BY timestamp DESC', (deviceID,))
+                rows = cursor.fetchall()
+                if len(rows) > 0:
+                    return rows
+                else:
+                    rows = [[]]
+                return rows
+    except mysql.connector.Error as e:
+        return [[]]
 
 def delete_medication(medID):
     try:
@@ -479,6 +541,26 @@ def save_recommendation(description, reco_type, context, health):
         return str(e)
 
 
+def save_device(device_code, device_no):
+    try:
+        conn = open_connection()
+        with conn:
+            with conn.cursor(dictionary=True) as cursor:
+                check = cursor.execute('SELECT *FROM device_subscription WHERE device_no=%s', (device_no,))
+                rows = cursor.fetchall()
+                if len(rows) > 0:
+                    return "exist"
+                else:
+                    result = cursor.execute(
+                        'INSERT INTO device_subscription(device_no, authentication_code) VALUES(%s, %s)',
+                        (device_no, device_code))
+                    conn.commit()
+                    return "success"
+
+    except mysql.connector.Error as e:
+        return str(e)
+
+
 def save_new_recommendation(description, reco_type, context, health, diagnID, userID):
     try:
         conn = open_connection()
@@ -597,14 +679,14 @@ def save_new_recommendation_list_from_med(diagnID, diaglist, userID):
                     for row in rows:
                         recoID = row["recoID"]
                         check = cursor.execute('SELECT * from medications WHERE diagnosisID=%s AND recoID=%s',
-                                                   (diagnID, recoID))
+                                               (diagnID, recoID))
                         rows1 = cursor.fetchall()
                         if len(rows1) > 0:
                             continue
                         result = cursor.execute(
-                                'INSERT INTO medications(diagnosisID, recoID, userID, sequenceNo) VALUES(%s, %s, %s, '
-                                '%s)',
-                                (diagnID, recoID, userID, sequenceNo))
+                            'INSERT INTO medications(diagnosisID, recoID, userID, sequenceNo) VALUES(%s, %s, %s, '
+                            '%s)',
+                            (diagnID, recoID, userID, sequenceNo))
                         conn.commit()
                 return "success"
 
@@ -640,21 +722,22 @@ def reload_vs():
         return [[str(e)]]
 
 
-def db_aggregated_vs():
+def db_aggregated_vs(deviceID):
     try:
         conn = open_connection()
         with conn:
             with conn.cursor(dictionary=True) as cursor:
                 result = cursor.execute(
-                    "SELECT MAX(hr) as maxhr, MAX(spo2) AS maxspo2,MAX(resp) AS maxresp, MAX(tempr) as maxtempr, MIN(hr) as minhr, MIN(spo2) AS minspo2, MIN(resp) AS minresp, MIN(tempr) as mintempr, CONVERT(AVG(hr),CHAR) as avghr,CONVERT(AVG(spo2),CHAR) AS avgspo2, CONVERT(AVG(resp),CHAR) AS avgresp, CONVERT(AVG(tempr),CHAR) as avgtempr FROM sensor_data;")
+                    "SELECT MAX(hr) as maxhr, MAX(spo2) AS maxspo2,MAX(resp) AS maxresp, MAX(tempr) as maxtempr, MIN(hr) as minhr, MIN(spo2) AS minspo2, MIN(resp) AS minresp, MIN(tempr) as mintempr, CONVERT(AVG(hr),CHAR) as avghr,CONVERT(AVG(spo2),CHAR) AS avgspo2, CONVERT(AVG(resp),CHAR) AS avgresp, CONVERT(AVG(tempr),CHAR) as avgtempr FROM vital_signs WHERE deviceID=%s",
+                    (deviceID,))
                 vital_signs = cursor.fetchall()
                 if len(vital_signs) > 0:
-                    get_vital_signs = jsonify(vital_signs)
+                    get_vital_signs = vital_signs
                 else:
-                    get_vital_signs = jsonify([["0"]])
+                    get_vital_signs = [["0"]]
                 return get_vital_signs
     except mysql.connector.Error as e:
-        return jsonify([[str(e)]])
+        return [[str(e)]]
 
 
 def db_get_rand_vs():
@@ -685,6 +768,22 @@ def db_add_vs(v_signs):
         conn.close()
     except mysql.connector.Error as e:
         return [[str(e)]]
+
+
+def save_data_from_sensor(deviceID, tempr, resp, spo2, hr, pr):
+    try:
+        conn = open_connection()
+        with conn:
+            with conn.cursor(dictionary=True) as cursor:
+                result = cursor.execute(
+                    'INSERT INTO vital_signs(deviceID, hr, spo2, resp, tempr, pressure) VALUES(%s, %s, %s, %s, %s, %s)',
+                    (deviceID, hr, spo2, resp, tempr, pr))
+                conn.commit()
+                vital_signs_id = cursor.lastrowid
+                return vital_signs_id
+
+    except mysql.connector.Error as e:
+        return 0
 
 
 def check_abnormality(heart, spo2, pressure, temperature, respiration):
@@ -782,21 +881,46 @@ def no_medicated_abnormalities():
         return 0
 
 
-def load_new_abnormalities_from_sensor(age="Adult"):
-    added = 0;
+def authenticate_device(device_no, device_key):
     try:
         conn = open_connection()
         with conn:
             with conn.cursor(dictionary=True) as cursor:
-                result = cursor.execute('SELECT *  FROM sensor_data ORDER BY RAND ( ) LIMIT 5 ')
+                result = cursor.execute('SELECT COUNT(*) AS total FROM device_subscription WHERE device_no=%s', (device_no, ))
+                rows = cursor.fetchone()
+                if rows["total"]==1:
+                    result1 = cursor.execute('SELECT COUNT(*) AS total FROM device_subscription WHERE device_no=%s AND authentication_code=%s',
+                                            (device_no,device_key))
+                    rows1= cursor.fetchone()
+                    if rows1["total"] == 1:
+                        return 2
+                    else:
+                        return 3
+                else:
+                    return 1
+    except mysql.connector.Error as e:
+        return 0
+
+
+def load_new_abnormalities_from_sensor(age=["Adult", "child", "infant", "Neonate"]):
+    added = 0;
+    txt = "";
+    s = ""
+    try:
+        conn = open_connection()
+        with conn:
+            with conn.cursor(dictionary=True) as cursor:
+                result = cursor.execute('SELECT *  FROM sensor_data ORDER BY RAND ( ) LIMIT 10 ')
                 sensor_data = cursor.fetchall()
                 for row in sensor_data:
-                    vs_ab = vital_signs_anomalies(row["tempr"], row["hr"], row["resp"], row["spo2"], "Normal", age)
-                    # s = s + " heart: " + str(row["hr"])+" tempr: " + str(row["tempr"])+" resp: " + str(row["resp"])+" spo2: " + str(row["spo2"])+"len(vs_ab): "+vs_ab+"===>"
-                    if len(vs_ab) > 0:
-                        # vb = vb + "=>heart: " + str(vs_ab["hrID"])
-                        for vs in vs_ab:
-                            added += add_abnormality(vs["hrID"], vs["spID"], vs["prID"], vs["btID"], vs["respID"])
+                    for ag in age:
+
+                        vs_ab = vital_signs_anomalies(row["tempr"], row["hr"], "Normal", row["spo2"], "Normal", ag)
+                        # s = s + " heart: " + str(row["hr"])+" tempr: " + str(row["tempr"])+" resp: " + str(row["resp"])+" spo2: " + str(row["spo2"])
+                        if len(vs_ab) > 0:
+                            for vs in vs_ab:
+                                t = json.dumps(vs)
+                                added += add_abnormality(vs["hrID"], vs["spID"], vs["prID"], vs["btID"], vs["respID"])
         conn.close()
         return added
     except mysql.connector.Error as e:
@@ -820,10 +944,10 @@ def vital_signs_anomalies(temp=-1, hr=-1, resp=-1, sp=-1, pr=-1, age=-1):
     else:
         hrName = ""
 
-    if resp < 0:
-        respName = "Normal"
-    else:
-        respName = ""
+    # if resp < 0:
+    #     respName = "Normal"
+    # else:
+    #     respName = ""
 
     if sp < 0:
         spName = "Normal"
@@ -838,6 +962,15 @@ def vital_signs_anomalies(temp=-1, hr=-1, resp=-1, sp=-1, pr=-1, age=-1):
     else:
         prName = "Normal"
         pr = -1
+
+    if isinstance(resp, int) and (age < 0 or age > 150):
+        if resp < 0:
+            respName = "Normal"
+        else:
+            respName = ""
+    else:
+        respName = "Normal"
+        resp = -1
     conn = open_connection()
     try:
         with conn:

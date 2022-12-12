@@ -3,6 +3,7 @@ from .db_config import db_get_reload_vs, reload_vs, check_user, get_device_data,
 from .db_config import vital_signs_anomalies, get_device_list
 from datetime import timedelta
 from .api import api
+from .manage_device import manage_device
 from .manage_vital_signs import manage_vital_signs
 from .manage_knowledge_based import manage_knowledge_based
 import json
@@ -18,6 +19,7 @@ def create_app():
     app.permanent_session_lifetime = timedelta(minutes=10)
     app.register_blueprint(manage_vital_signs)
     app.register_blueprint(manage_knowledge_based)
+    app.register_blueprint(manage_device)
     app.register_blueprint(api, url_prefix='/api')
 
     @app.route("/", methods=["POST", "GET"])  # this sets the route to this page
@@ -160,7 +162,7 @@ def create_app():
     def check():
         return render_template("webchat test2.html")
 
-    @app.route('/mychat')
+    @app.route('/mychat',methods=['POST'])
     def homechat():
         return render_template('chart.html')
 
@@ -214,7 +216,7 @@ def create_app():
     @app.route('/spo2_xchart', methods=['POST'])
     def x_spo2_chart():
         # device_no = request.form['deviceNo']
-        device_no = request.form['deviceNo']
+        device_no = request.json['deviceNo']
         # device_no = "DVS0003"
         deviceID = get_device(device_no)
         vital_signs = get_device_data(deviceID)

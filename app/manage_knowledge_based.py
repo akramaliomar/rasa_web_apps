@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, redirect, url_for, render_template, request, session, flash, Blueprint
 from .db_config import fetch_health, list_recommendations, save_recommendation, no_medicated_abnormalities
 from .db_config import check_medication, check_abnormality, list_abnormalities, load_new_abnormalities_from_sensor
-from .db_config import list_from_recommendations, fetch_abnormal_vs, list_from_medication, list_anomaly_recommendations
+from .db_config import list_from_recommendations, fetch_abnormal_vs, list_from_medication, list_anomaly_recommendations1
 from .db_config import save_new_recommendation, save_new_recommendation_list, save_new_recommendation_list_from_med
 from .db_config import delete_medication
 from datetime import timedelta
@@ -96,7 +96,7 @@ def load_anomaly_recommendations():
     if "username" in session:
         if request.method == "POST":
             diagnID = request.form["diagnID"]
-            recommendations = list_anomaly_recommendations(diagnID)
+            recommendations = list_anomaly_recommendations1(diagnID)
             # return recommendations
             # return fetch_abnormal_vs(diagnID)
             return render_template("anomaly_recommendations.html", recommendations=recommendations)

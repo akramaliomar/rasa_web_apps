@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, Blueprint
 from .db_config import db_add_vs, db_get_vs, db_aggregated_vs, db_get_rand_vs, read_data_from_sensor, save_data_from_sensor
-from .db_config import read_recent_data_from_sensor, get_device, vital_signs_anomalies, add_new_abnormality, list_anomaly_recommendations
+from .db_config import read_recent_data_from_sensor, get_device, vital_signs_anomalies
+from .db_config import add_new_abnormality, list_anomaly_recommendations, authenticate_device, fetch_abnormal_vs
 import json
 import requests
 import mysql.connector
@@ -67,15 +68,17 @@ def get_vital_signs():
     if len(vital_signs[0]) > 1:
         anomalies = vital_signs_anomalies(vital_signs[0]["tempr"], vital_signs[0]["hr"], vital_signs[0]["resp"],
                                           vital_signs[0]["spo2"], "Normal", age)
+        agr = db_aggregated_vs(deviceID)
         if len(anomalies) > 0:
-            readings  = [vital_signs, anomalies]
+
+            readings  = [vital_signs, anomalies, agr]
             return jsonify(readings)
         else:
             return jsonify([vital_signs,
-                            [{"btName": "Unknown", "respName": "Unknown", "hrName": "Unknown", "spName": "Unknown"}]])
+                            [{"btName": "Unknown", "respName": "Unknown", "hrName": "Unknown", "spName": "Unknown"}], agr])
     else:
         return jsonify([[{"tempr": "Unknown", "resp": "Unknown", "hr": "Unknown", "spo2": "Unknown"}],
-                        [{"btName": "Unknown", "respName": "Unknown", "hrName": "Unknown", "spName": "Unknown"}]])
+                        [{"btName": "Unknown", "respName": "Unknown", "hrName": "Unknown", "spName": "Unknown"}], {"avgspo2": "Unknown", "avgtempr": "Unknown", "avghr": "Unknown", "avgresp": "Unknown", "avgtempr": "Unknown", "maxhr": "Unknown", "maxresp": "Unknown", "maxspo2": "Unknown", "maxtempr": "Unknown", "minhr": "Unknown", "minresp": "Unknown", "minspo2": "Unknown", "mintempr": "Unknown"}])
 
 
 @api.route('/get_recommendtions_vs', methods=['POST', 'GET'])
@@ -84,10 +87,19 @@ def get_recommendations_vital_signs():
         return jsonify({"msg": "Missing JSON in request"}), 400
     json_data = request.get_json()
     device_no = json_data["deviceNo"]
+    age = json_data["age"]
+    context = json_data["context"]
+    health = json_data["health"]
     # device_no = "DVS0003"
-    age = "Adult"
+    # age = "Adult"
     deviceID = get_device(device_no)
+    # return jsonify(context)
     vital_signs = read_recent_data_from_sensor(deviceID)
+
+    health = normalize_health_list(health)
+    #return jsonify(health)
+    # vs_ls = "\"Null\"," + ','.join(health)
+    #return jsonify(vs_ls)
     # return jsonify(vital_signs)
     # vital_signs = db_get_reload_vs()
     if len(vital_signs[0]) > 0:
@@ -96,7 +108,9 @@ def get_recommendations_vital_signs():
         # return jsonify(anomalies)
         if len(anomalies) > 0:
             diagID = add_new_abnormality(anomalies[0]["hrID"], anomalies[0]["spID"], anomalies[0]["prID"], anomalies[0]["btID"], anomalies[0]["respID"])
-            recommendations = list_anomaly_recommendations(diagID)
+            # vs_ls = "\"Null\"," + ','.join(fetch_abnormal_vs(diagID))
+            # return jsonify(fetch_abnormal_vs(diagID))
+            recommendations = list_anomaly_recommendations(diagID, context, health)
             return jsonify(recommendations)
             # recommendations = fetch_recommendations_for_anomalies(anomalies[0]["prID"], anomalies[0]["spID"],
             # anomalies[0]["hrID"], anomalies[0]["respID"], anomalies[0]["btID"])
@@ -104,10 +118,46 @@ def get_recommendations_vital_signs():
             return jsonify([["no readings"]])
     return jsonify([["no readings"]])
 
+#
+# @api.route('/get_recommendtions_vs_test', methods=['POST', 'GET'])
+# def get_recommendations_vital_signs_test():
+#     if not request.is_json:
+#         return jsonify({"msg": "Missing JSON in request"}), 400
+#     json_data = request.get_json()
+#     device_no = json_data["deviceNo"]
+#     age = json_data["age"]
+#     context = json_data["context"]
+#     health = json_data["health"]
+#     return jsonify({"sms": health[0]})
 
-@api.route('/fetch_aggr_vs', methods=['GET'])
-def get_aggregated_vs():
-    return db_aggregated_vs()
+@api.route('/send_sensor_data', methods=['POST','GET'])
+def send_sensor_data_vs():
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+    json_data = request.get_json()
+    device_no = json_data["deviceNo"]
+    spo2 = float(json_data["spo2"])
+    temp = float(json_data["temp"])
+    heart = float(json_data["heart"])
+    device_api_key = json_data["device_api_key"]
+    deviceID = get_device(device_no)
+    id  = save_data_from_sensor(deviceID, temp, 13, spo2, heart, 95)
+    if id >=1:
+        return jsonify({"msg": "success"}), 200
+    else:
+        return jsonify({"msg": "error"}), 200
+
+
+@api.route('/authenticate_device_user', methods=['POST','GET'])
+def authenticate_device_bot_user():
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+    json_data = request.get_json()
+    device_no = json_data["deviceNo"]
+    device_key = str(json_data["device_key"])
+
+    id = authenticate_device(device_no, device_key)
+    return jsonify({"msg": str(id)}), 200
 
 
 @api.route('/prediction', methods=['GET'])
@@ -138,3 +188,20 @@ def recent_vital_signs():
 
     recent_data = read_recent_data_from_sensor(deviceID)
     return jsonify(recent_data)
+
+def normalize_health_list(health):
+    health = list(map(lambda x: x.replace('hiv', 'HIV'), health))
+    health = list(map(lambda x: x.replace('AIDS', 'HIV'), health))
+    health = list(map(lambda x: x.replace('diabetics', 'Diabetics'), health))
+    health = list(map(lambda x: x.replace('DIABETICS', 'Diabetics'), health))
+    health = list(map(lambda x: x.replace('pregnant', 'Pregnant'), health))
+    health = list(map(lambda x: x.replace('PREGNANT', 'Pregnant'), health))
+    health = list(map(lambda x: x.replace('MALARIA', 'Malaria'), health))
+    health = list(map(lambda x: x.replace('malaria', 'Malaria'), health))
+    temp  = []
+    result = [i for n, i in enumerate(health) if i not in health[:n]]
+    result.append("Any")
+    for i in result:
+        temp.append("\"" + i + "\"")
+
+    return temp
