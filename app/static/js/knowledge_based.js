@@ -296,8 +296,9 @@ $.ajax({
 	data: {diagnID:diagnID},
 	success: function(data) {
 			$('#med_content').html(data);
-			var str = "Age["+ age+"] <----> Temperature["+tempr+"] <----> Breathing Rate["+hr+"] <----> Respiration["+resp+"] <----> Spo2["+sp+"] <----> Pressure ["+pr+"]";
-			var str = "Age["+ age+"] <----> Temperature["+tempr+"] <----> Breathing Rate["+hr+"] <----> Spo2["+sp+"]";
+			//var str = "Age["+ age+"] <----> Temperature["+tempr+"] <----> Breathing Rate["+hr+"] <----> Respiration["+resp+"] <----> Spo2["+sp+"] <----> Pressure ["+pr+"]";
+			var str = "Age["+ age+"] <----> Temperature["+tempr+"] <----> Heart Rate["+hr+"] <----> Spo2["+sp+"];
+			//var str = "Age["+ age+"] <----> Temperature["+tempr+"] <----> Breathing Rate["+hr+"] <----> Spo2["+sp+"]";
 			$('#medModalLabel').html(str);
 			fetch_recommendation_from(diagnID);
 			fetch_anomaly_recommendations(diagnID);
