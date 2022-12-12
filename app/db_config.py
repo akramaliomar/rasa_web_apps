@@ -407,7 +407,8 @@ def list_abnormalities():
         conn = open_connection()
         with conn:
             with conn.cursor(dictionary=True) as cursor:
-                result = cursor.execute('SELECT ageName, minage, maxage, hrName, hrmax, hrmin, respName, minresp, '
+                result = cursor.execute('SELECT ageName, IFNULL(temp.medID, 0) as medID,  minage, maxage, hrName, hrmax, '
+                                        'hrmin, respName, minresp, '
                                         'maxresp, spName, minsp, maxsp, btName, btmax, btmin, prName, minpr, maxpr, '
                                         'status, diagnosisID FROM (((((patient_age_range INNER JOIN heart_rate USING('
                                         'ageID)) INNER JOIN spo2 USING(ageID)) INNER JOIN respiration USING(ageID)) '
@@ -416,14 +417,15 @@ def list_abnormalities():
                                         'pressure.prID,"-",respiration.respID,"-",body_temperature.btID)=CONCAT('
                                         'symptomes_abmonality.hrID,"-",symptomes_abmonality.spID,"-",'
                                         'symptomes_abmonality.prID,"-",symptomes_abmonality.respID,"-",'
-                                        'symptomes_abmonality.btID) ORDER BY symptomes_abmonality.status ASC;')
+                                        'symptomes_abmonality.btID) LEFT JOIN (SELECT distinct diagnosisID, medID FROM '
+                                        'medications) as temp USING(diagnosisID) ORDER BY symptomes_abmonality.status ASC;')
                 abnormalities = cursor.fetchall()
                 if len(abnormalities) > 0:
                     return abnormalities
                 else:
                     return []
     except mysql.connector.Error as e:
-        return []
+        return str(e)
 
 
 def save_vital_signs(description, minvalue, maxvalue, age_range_name, new_age_range, min_age, max_age, tag):
