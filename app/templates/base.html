@@ -74,8 +74,10 @@
   </head>
   <body onload="load_vital_signs_chart()">
 
-  <div id="rasa-chat-widget" data-websocket-url="http://154.53.40.198:80"></div>
+   <div style="z-index: 2147483647 !important" id="rasa-chat-widget" data-websocket-url="http://154.53.40.198:80"></div>
 <script src="https://unpkg.com/@rasahq/rasa-chat" type="application/javascript"></script>
+
+
 
     <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
       <div class="sidebar-brand d-none d-md-flex">
@@ -83,9 +85,10 @@
       </div>
       <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
         <li class="nav-title"><a class="nav-link" href="/">Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="/manage_knowledge_based">Knowledge Based</a></li>
+        <li class="nav-item"><a class="nav-link" href="/manage_knowledge_based">Manage Recommendations</a></li>
         <li class="nav-item"><a class="nav-link" href="/manage_vital_signs">Manage Vital Signs</a></li>
-        <li class="nav-item"><a class="nav-link" href="colors.html">User List</a></li>
+         <li class="nav-item"><a class="nav-link" href="/manage_device">Manage Devices</a></li>
+        <li class="nav-item"><a class="nav-link" href="colors.html">User Management</a></li>
         <li class="nav-item"><a class="nav-link" href="typography.html">Medical Expert</a></li>
       </ul>
       <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>

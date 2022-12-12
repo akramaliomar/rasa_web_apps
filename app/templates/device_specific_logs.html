@@ -1,0 +1,30 @@
+        <p><span style="float:left">Device Logs</span></p><br>
+<table id="example" class="display" style="width:100%">
+<thead>
+<tr>
+ <th>Date</th>
+ <th>Temperature</th>
+ <th>Heart Rate</th>
+ <th>Spo2</th>
+ <th>Edit</th>
+ <th>Delete</th>
+  </tr>
+</thead>
+  <tbody>
+
+      {% for x in device_logs %}
+
+        <tr>
+          <td>{{x["timestamp"]}}</td>
+
+          <td>{{x["tempr"]}}</td>
+          <td>{{x["hr"]}}</td>
+          <td>{{x["spo2"]}}</td>
+          <td><a  aria-disabled="true" href="#">edit</a></td>
+          <td><a aria-disabled="true" href="#">delete</a></td>
+
+        </tr>
+      {% endfor %}
+
+  </tbody>
+</table>

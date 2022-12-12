@@ -1,0 +1,17 @@
+ <form class="row g-3 needs-validation" novalidate="">
+
+      <div class="col-md-6">
+        <label class="form-label" for="device_no">Description<span id="device_no-info" class="info"></span></label>
+        <input class="form-control InputBox" id="device_no" type="text" placeholder="Enter Device Number (eg DVS0001)" required="">
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+    <div class="col-md-6">
+        <label class="form-label" for="device_code">Device Security Code<span id="device_code-info" class="info"></span></label>
+        <input class="form-control InputBox" id="device_code" type="text" placeholder="Enter Security Code" required="">
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+       <p>   <button onclick="save_device_form()" class="btn btn-primary" type="button">Save Data</button>
+
+       </p><br>
+ </form>

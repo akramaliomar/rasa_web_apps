@@ -11,7 +11,7 @@
             </ol>
           </nav>
         <div class="col-md-5">
-            <select onchange="load_device_data()" class="form-select InputBox" id="device_no"  required="">
+            <select style="padding:0px; padding-left: 5px" onchange="load_device_data()" class="form-select InputBox" id="device_no"  required="">
                 {% for row in device %}
                     <option value='{{row["device_no"]}}'>{{row["device_no"]}}</option>
 
@@ -44,9 +44,9 @@
                     </div>
                   </div>
                 </div>
-                <div class="c-chart-wrapper mt-3 mx-3" style="height:70px;">
-                  <canvas class="chart" id="card-chart1" height="70"></canvas>
-                </div>
+<!--                <div class="c-chart-wrapper mt-3 mx-3" style="height:70px;">-->
+<!--                  <canvas class="chart" id="card-chart1" height="70"></canvas>-->
+<!--                </div>-->
               </div>
             </div>
             <!-- /.col-->
@@ -69,9 +69,9 @@
                   </div>
 
                 </div>
-                <div class="c-chart-wrapper mt-3 mx-3" style="height:70px;">
-                  <canvas class="chart" id="card-chart2" height="70"></canvas>
-                </div>
+<!--                <div class="c-chart-wrapper mt-3 mx-3" style="height:70px;">-->
+<!--                  <canvas class="chart" id="card-chart2" height="70"></canvas>-->
+<!--                </div>-->
               </div>
             </div>
             <!-- /.col-->
@@ -94,13 +94,13 @@
                   </div>
 
                 </div>
-                <div class="c-chart-wrapper mt-3" style="height:70px;">
-                  <canvas class="chart" id="card-chart3" height="70"></canvas>
-                </div>
+<!--                <div class="c-chart-wrapper mt-3" style="height:70px;">-->
+<!--                  <canvas class="chart" id="card-chart3" height="70"></canvas>-->
+<!--                </div>-->
               </div>
             </div>
             <!-- /.col-->
-            <div class="col-sm-6 col-lg-3">
+           <!--  <div class="col-sm-6 col-lg-3">
               <div class="card mb-4 text-white bg-danger">
                 <div class="card-body pb-0 d-flex justify-content-between align-items-start">
                   <div>
@@ -109,12 +109,12 @@
                     <div>
                         {{content["respName"]}}
 
-<!--                        {% if content["resp"] >= 20 or content["resp"] <= 12 %}-->
+                        {% if content["resp"] >= 20 or content["resp"] <= 12 %}
 <!--                            Abnormal-->
 <!--                        {% else %}-->
 <!--                            Normal-->
 <!--                        {% endif %}-->
-
+<!--
                     </div>
                   </div>
 
@@ -123,7 +123,7 @@
                   <canvas class="chart" id="card-chart4" height="70"></canvas>
                 </div>
               </div>
-            </div>
+            </div>-->
             <!-- /.col-->
           </div>
 
@@ -156,7 +156,7 @@
                     </div>
 
                     <!--  temp  chart start-->
-                    <div class="col-md-6 v_sign" id="temp">
+                    <div class="col-md-4 v_sign" id="temp">
 		                <h3>Body Temperature Trend</h3>
 		                <div class="msg" id="temp_msg"></div>
 		                <div class="placeholders" id="temp_placeholder">
@@ -166,7 +166,7 @@
                 <!--    temp chart end-->
 
                     <!--               heart  chart start-->
-                    <div class="col-md-6 v_sign" id="heart">
+                    <div class="col-md-4 v_sign" id="heart">
 		                <h3>Heart Rate Trends</h3>
 		                <div class="msg" id="heart_msg"></div>
 		                <div class="placeholders" id="heart_placeholder">
@@ -174,24 +174,26 @@
 		                </div>
 	                </div>
                 <!--    heart chart end-->
-                    <!--               resp  chart start-->
-                    <div class="col-md-6 v_sign" id="resp" >
-		                <h3>Respiration Rate Trends</h3>
-		                <div class="msg" id="resp_msg"></div>
-		                <div class="placeholders" id="resp_placeholder">
-			                <figure class="v_chart" id="resp_chart"></figure>
-		                </div>
-	                </div>
-                <!--    resp chart end-->
+
                     <!--               spo2  chart start-->
-                    <div class="col-md-6 v_sign" id="spo2">
-		                <h3>Respiration Rate Trends</h3>
+                    <div class="col-md-4 v_sign" id="spo2">
+		                <h3>Spo2 Trends</h3>
 		                <div class="msg" id="spo2_msg"></div>
 		                <div class="placeholders" id="spo2_placeholder">
 			                <figure class="v_chart" id="spo2_chart"></figure>
 		                </div>
 	                </div>
                 <!--    spo2 chart end-->
+
+                     <!--               resp  chart start-->
+                     <!--   <div class="col-md-6 v_sign" id="resp" >
+		                <h3>Respiration Rate Trends</h3>
+		                <div class="msg" id="resp_msg"></div>
+		                <div class="placeholders" id="resp_placeholder">
+			                <figure class="v_chart" id="resp_chart"></figure>
+		                </div>
+	                </div>-->
+                <!--    resp chart end-->
                 </div>
 
             </div>

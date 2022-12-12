@@ -1,0 +1,31 @@
+
+
+
+        <p><span style="float:left">Device List</span></p><br>
+<table id="example" class="display" style="width:100%">
+<thead>
+<tr>
+ <th>Device Number</th>
+ <th>Device Security Code</th>
+ <th>Last Connected</th>
+ <th>Edit</th>
+ <th>Delete</th>
+  </tr>
+</thead>
+  <tbody>
+
+      {% for x in devices %}
+
+        <tr>
+          <td>{{x["device_no"]}}</td>
+
+          <td>{{x["authentication_code"]}}</td>
+          <td>{{x["last_seen"]}}</td>
+          <td><a  aria-disabled="true" href="#">edit</a></td>
+          <td><a aria-disabled="true" href="#">delete</a></td>
+
+        </tr>
+      {% endfor %}
+
+  </tbody>
+</table>
