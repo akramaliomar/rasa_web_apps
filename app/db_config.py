@@ -246,7 +246,7 @@ def fetch_abnormal_vs(diagID):
         conn = open_connection()
         with conn:
             with conn.cursor(dictionary=True) as cursor:
-                result = cursor.execute('SELECT hrName as Breathing, respName as Respiration, spName as Spo2, '
+                result = cursor.execute('SELECT hrName as Heart, respName as Respiration, spName as Spo2, '
                                         ' btName as Temperature, prName as Pressure '
                                         'FROM (((((patient_age_range INNER JOIN heart_rate USING(ageID)) INNER JOIN '
                                         'spo2 USING(ageID)) INNER JOIN respiration USING(ageID)) '
