@@ -417,8 +417,10 @@ def list_abnormalities():
                                         'pressure.prID,"-",respiration.respID,"-",body_temperature.btID)=CONCAT('
                                         'symptomes_abmonality.hrID,"-",symptomes_abmonality.spID,"-",'
                                         'symptomes_abmonality.prID,"-",symptomes_abmonality.respID,"-",'
-                                        'symptomes_abmonality.btID) LEFT JOIN (SELECT distinct diagnosisID, medID FROM '
-                                        'medications) as temp USING(diagnosisID) ORDER BY symptomes_abmonality.status ASC;')
+                                        'symptomes_abmonality.btID) LEFT JOIN (SELECT distinct diagnosisID, '
+                                        'COUNT(medID) as medID FROM '
+                                        'medications GROUP BY diagnosisID) as temp USING(diagnosisID) ORDER BY '
+                                        'symptomes_abmonality.status ASC;')
                 abnormalities = cursor.fetchall()
                 if len(abnormalities) > 0:
                     return abnormalities
